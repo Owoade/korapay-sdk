@@ -69,13 +69,6 @@ export default class Korapay {
 
 }
 
-const korapay = new Korapay('sk_test_CzAp1aE2tG4egovSSRJR4yEYKX6q7znF4U6LDmPW', 'pk_test_wURfuLEtXQvuG74bsPs1s9ihMp6osFPY3e84HeEg');
 
-// korapay.charge.query("c0c37817-84fd-4acf-8544-c8d304ee1114").then( obj => console.log(obj) )
-korapay.virtual_accounts.credit_sandbox_account({
-    account_number: "1110025509",
-    amount: 1000,
-    currency: "NGN",
-  }).then( obj => console.log(obj))
 
 

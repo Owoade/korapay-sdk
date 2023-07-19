@@ -1,21 +1,27 @@
+import Balances from "../lib/balances";
+import Miscellaneous from "../lib/miscellaneous";
+import Charge from "../lib/pay_ins";
+import Payouts from "../lib/pay_outs";
+import Verification from "../lib/verification";
+import VirtualAccounts from "../lib/virtual_accounts";
 import { ChargeCardData } from "./pay_ins/card";
 
 declare module "korapay-node" {
 
     class KorapayInstance {
 
-        charge: ChargeInstance;
+        charge: Charge;
 
-        payout: PayoutsInstance;
+        payout: Payouts;
 
-        verification: VerificationInstance;
+        verification: Verification;
 
-        misc: MiscellaneousInstance;
+        misc: Miscellaneous;
 
-        balances: BalancesInstance;
+        balances: Balances;
 
-        virtual_accounts: VirtualAccountsInstance;
-        
+        virtual_accounts: VirtualAccounts;
+
     }
 
 }
