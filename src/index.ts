@@ -4,7 +4,9 @@ import Payouts from "./pay_outs/";
 import Verification from "./verification/";
 import Miscellaneous from "./miscellaneous/";
 import Balances from "./balances/";
-import VirtualAccounts from "./virtual_accounts/";
+import VirtualAccounts from "./virtual_accounts/"
+
+console.log = ()=>{};
 
 export default class Korapay {
 
@@ -61,7 +63,7 @@ export default class Korapay {
 
 }
 
-console.log = ()=>{}
+
 
 
 
