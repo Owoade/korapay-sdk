@@ -5,26 +5,30 @@
 ### How to use
 
 ```bash 
-npm install lazerpay-node-sdk
+# NPM
+npm install korapay-node
+
+# YARN
+yarn add korapay-node
 ```
 
 ESM,
 
 ```javascript
-import Korapay from "korapay-node"
+import { Korapay } from "korapay-node";
+
+const korapay = new Korapay(secret_key, public_key);
 ```
 
 CommonJs
 
 ```javascript
-const Korapay = require("korapay-node")
-```
+const { Korapay } = require("korapay-node");
 
-```javascript
 const korapay = new Korapay(secret_key, public_key);
 ```
 
-All methods use promise meaning you can either use the `async...await` or `then`. However, you do not have to clog your code with blocks of `try..catch` as the SDK intuitively handles error already. For instance:
+All methods use promise meaning you can either use the `async...await` or `then`. However, you do not have to clutter your code with blocks of `try..catch` as the SDK intuitively handles error already. For instance:
 
 ```javascript
  const charge = await korapay.charge.initialize( payload );

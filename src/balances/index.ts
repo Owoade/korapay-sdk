@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
-import { KorapayDecorator } from "../utils.js";
+import { KorapayDecorator } from "../utils";
 import { GetBalanceResponse } from "./interface";
 
 export default class Balances {

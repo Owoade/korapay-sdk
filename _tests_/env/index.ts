@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import Korapay from "../..";
+import Korapay from "../../dist";
 
 dotenv.config();
 

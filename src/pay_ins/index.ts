@@ -5,9 +5,9 @@ import {
   InitiateChargePayload,
   InitiateChargeResponse,
   QueryChargeResponse,
-} from "./interface";
+} from "./interface.js";
 import  { KorapayDecorator } from "../utils.js";
-import Card from "./card";
+import Card from "./card.js";
 
 export default class Charge {
 

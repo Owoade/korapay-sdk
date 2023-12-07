@@ -1,4 +1,4 @@
-import { Response } from "../miscellaneous/intercace";
+import { Response } from "../miscellaneous/intercace.js";
 
 interface CardDetails  {
     type: "matercard" | "verve" | "visa",
@@ -9,7 +9,7 @@ interface CardDetails  {
 
 type TransactionStatus = 'success' | 'processing' | 'failed';
   
-export interface ChargeCardData {
+interface ChargeCardData {
     amount: number;
     amount_charged: number;
     auth_model: "OTP" | "3DS" | "AVS" | "PIN";
@@ -23,13 +23,9 @@ export interface ChargeCardData {
     card: CardDetails
 }
 
+type ChargeCardResponse = Response<ChargeCardData>
 
-
-export type ChargeCardResponse = Response<ChargeCardData>
-
-
-
-export interface AuthorizeCardPayload {
+interface AuthorizeCardPayload {
     transaction_reference:	string;
     authorization:	{
         pin: string,
@@ -60,9 +56,9 @@ interface AuthorizeCardInterface  {
     redirect_url: string
 }
 
-export type  AuthorizeCardResponse = Response<AuthorizeCardInterface>
+type  AuthorizeCardResponse = Response<AuthorizeCardInterface>
   
-export interface ResendOtpInterface {
+interface ResendOtpInterface {
     status: TransactionStatus,
     response_message: string,
     metadata: {
@@ -70,5 +66,13 @@ export interface ResendOtpInterface {
     }
 }
 
-export type ResendOtpResponse = Response<ResendOtpInterface>
+type ResendOtpResponse = Response<ResendOtpInterface>
 
+export {
+    ResendOtpResponse,
+    ResendOtpInterface,
+    AuthorizeCardResponse,
+    AuthorizeCardPayload,
+    ChargeCardResponse, 
+    ChargeCardData
+}

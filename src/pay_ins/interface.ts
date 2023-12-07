@@ -1,6 +1,6 @@
-import { Response } from "../miscellaneous/intercace";
+import { Response } from "../miscellaneous/intercace.js";
 
-export interface InitiateChargePayload {
+interface InitiateChargePayload {
     amount: number;
     redirect_url?: string;
     currency: string;
@@ -22,7 +22,7 @@ interface InitiateChargeResponseData {
     checkout_url:	string
 }
 
-export type InitiateChargeResponse = Response<InitiateChargeResponseData>
+type InitiateChargeResponse = Response<InitiateChargeResponseData>
 
 interface QueryChargeResponseData {
   reference: string;
@@ -42,7 +42,7 @@ interface QueryChargeResponseData {
   payment_attempts?: any[];
 }
 
-  export interface InitiateBankTransferPayload {
+  interface InitiateBankTransferPayload {
     account_name: string;
     amount: number;
     currency: string;
@@ -50,7 +50,7 @@ interface QueryChargeResponseData {
     customer: CustomerData;
   }
 
-export type QueryChargeResponse = Response<QueryChargeResponseData>
+type QueryChargeResponse = Response<QueryChargeResponseData>
 
 interface BankAccountData {
     account_name: string;
@@ -75,9 +75,15 @@ interface BankAccountData {
     customer: CustomerData;
 }
 
-export type InitiateBankTransferResponse = Response<InitiateBankTransferResponseData>
+type InitiateBankTransferResponse = Response<InitiateBankTransferResponseData>
 
-
+export {
+  InitiateChargePayload,
+  InitiateChargeResponse,
+  InitiateBankTransferPayload,
+  QueryChargeResponse,
+  InitiateBankTransferResponse
+}
   
 
   

@@ -1,0 +1,237 @@
+"use strict";
+const axios = require("axios");
+
+const __create = Object.create;
+const __defProp = Object.defineProperty;
+const __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+const __getOwnPropNames = Object.getOwnPropertyNames;
+const __getProtoOf = Object.getPrototypeOf;
+const __hasOwnProp = Object.prototype.hasOwnProperty;
+
+const __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+
+const __copyProps = (to, from, except, desc) => {
+  if (from && (typeof from === "object" || typeof from === "function")) {
+    for (let key of __getOwnPropNames(from)) {
+      if (!__hasOwnProp.call(to, key) && key !== except) {
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+      }
+    }
+  }
+  return to;
+};
+
+const KorapayDecorator = {
+  forCatchingError() {
+    return function(target, propertyKey, descriptor) {
+      console.log(target, propertyKey);
+      const originalMethod = descriptor.value;
+      descriptor.value = async function(...args) {
+        try {
+          const result = await originalMethod.apply(this, args);
+          return result;
+        } catch (error) {
+          const e = error;
+          const response = e.response;
+          return { ...response.data, status_code: response.status };
+        }
+      };
+    };
+  }
+};
+
+// src/pay_ins/card.js
+class Card {
+  constructor(request) {
+    this.request = request;
+    this.charge = this.charge.bind(this);
+    this.authorize = this.authorize.bind(this);
+    this.resend_otp = this.resend_otp.bind(this);
+  }
+
+  async charge(charge_data) {
+    const response = await this.request.post("/charges/card", { charge_data });
+    return response.data;
+  }
+
+  async authorize(payload) {
+    const response = await this.request.post("/charges/card/authorize", payload);
+    return response.data;
+  }
+
+  async resend_otp(transaction_reference) {
+    const response = await this.request.post("/charges/card/authorize", { transaction_reference });
+    return response.data;
+  }
+}
+
+__defProp(Card.prototype, "charge", 1, KorapayDecorator.forCatchingError());
+__defProp(Card.prototype, "authorize", 1, KorapayDecorator.forCatchingError());
+__defProp(Card.prototype, "resend_otp", 1, KorapayDecorator.forCatchingError());
+
+// src/pay_ins/index.js
+class Charge {
+  constructor(request) {
+    this.request = request;
+    this.card = new Card(request);
+    this.initialize = this.initialize.bind(this);
+    this.query = this.query.bind(this);
+    this.bank_transfer = this.bank_transfer.bind(this);
+  }
+
+  async initialize(payload) {
+    const response = await this.request.post("/charges/initialize", payload);
+    return response.data;
+  }
+
+  async query(reference) {
+    const response = await this.request.get(`/charges/${reference}`);
+    return response.data;
+  }
+
+  async bank_transfer(payload) {
+    const response = await this.request.post("/charges/bank-transfer", payload);
+    return response.data;
+  }
+}
+
+__defProp(Charge.prototype, "initialize", 1, KorapayDecorator.forCatchingError());
+__defProp(Charge.prototype, "query", 1, KorapayDecorator.forCatchingError());
+__defProp(Charge.prototype, "bank_transfer", 1, KorapayDecorator.forCatchingError());
+
+// src/pay_outs/index.js
+class Payouts {
+  constructor(request) {
+    this.request = request;
+  }
+
+  async payout_to_bank(payload) {
+    const response = await this.request.post("/transactions/disburse", payload);
+    return response.data;
+  }
+
+  async verify_payout(transaction_reference) {
+    const response = await this.request.get(`/transactions/${transaction_reference}`);
+    return response.data;
+  }
+}
+
+__defProp(Payouts.prototype, "payout_to_bank", 1, KorapayDecorator.forCatchingError());
+__defProp(Payouts.prototype, "verify_payout", 1, KorapayDecorator.forCatchingError());
+
+// src/verification/index.js
+class Verification {
+  constructor(request) {
+    this.request = request;
+  }
+
+  async resolve_bank_account(payload) {
+    const response = await this.request.post("/misc/banks/resolve", payload);
+    return response.data;
+  }
+}
+
+__defProp(Verification.prototype, "resolve_bank_account", 1, KorapayDecorator.forCatchingError());
+
+// src/miscellaneous/index.js
+class Miscellaneous {
+  constructor(request) {
+    this.request = request;
+  }
+
+  async list_banks() {
+    const response = await this.request.get("/misc/banks");
+    return response.data;
+  }
+
+  async list_mmo(country_code) {
+    const response = await this.request.get(`/misc/mobile-money?countryCode=${country_code}`);
+    return response.data;
+  }
+}
+
+__defProp(Miscellaneous.prototype, "list_banks", 1, KorapayDecorator.forCatchingError());
+__defProp(Miscellaneous.prototype, "list_mmo", 1, KorapayDecorator.forCatchingError());
+
+// src/balances/index.js
+class Balances {
+  constructor(request) {
+    this.request = request;
+  }
+
+  async get() {
+    const response = await this.request.get("/balances");
+    return response.data;
+  }
+}
+
+__defProp(Balances.prototype, "get", 1, KorapayDecorator.forCatchingError());
+
+// src/virtual_accounts/index.js
+class VirtualAccounts {
+  constructor(request) {
+    this.request = request;
+  }
+
+  async create(payload) {
+    const response = await this.request.post("/virtual-bank-account", payload);
+    return response.data;
+  }
+
+  async get_details(account_reference) {
+    const response = await this.request.get(`/virtual-bank-account/${account_reference}`);
+    return response.data;
+  }
+
+  async get_transactions(account_number) {
+    const response = await this.request.get(`/virtual-bank-account/transactions?account_number=${account_number}`);
+    return response.data;
+  }
+
+  async credit_sandbox_account(payload) {
+    const response = await this.request.post("/virtual-bank-account/sandbox/credit", payload);
+    return response.data;
+  }
+}
+
+__defProp(VirtualAccounts.prototype, "create", 1, KorapayDecorator.forCatchingError());
+__defProp(VirtualAccounts.prototype, "get_details", 1, KorapayDecorator.forCatchingError());
+__defProp(VirtualAccounts.prototype, "get_transactions", 1, KorapayDecorator.forCatchingError());
+__defProp(VirtualAccounts.prototype, "credit_sandbox_account", 1, KorapayDecorator.forCatchingError());
+
+// src/index.js
+
+"use strict";
+const axios = require("axios");
+
+// Rest of the code remains the same
+
+// src/index.js
+
+class Korapay {
+  constructor(secret_key, public_key) {
+    this.sercret_key = secret_key;
+    const base_url = "https://api.korapay.com/merchant/api/v1";
+    const config = (key) => ({
+      baseURL: base_url,
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json"
+      }
+    });
+    this.request = axios.create(config(secret_key));
+    this.public_request = axios.create(config(public_key));
+    this.charge = new Charge(this.request);
+    this.payout = new Payouts(this.request);
+    this.verification = new Verification(this.request);
+    this.misc = new Miscellaneous(this.public_request);
+    this.balances = new Balances(this.request);
+    this.virtual_accounts = new VirtualAccounts(this.request);
+  }
+}
+
+module.exports = Korapay;
+

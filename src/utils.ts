@@ -1,35 +1,34 @@
-import { ErrorResponse } from "./miscellaneous/intercace"; 
-
+import { ErrorResponse } from "./miscellaneous/intercace.js";
 
 export const KorapayDecorator = {
-    forCatchingError() {
-
-        return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-
-          console.log(target, propertyKey)
-
-        const originalMethod = descriptor.value;
+  forCatchingError() {
+    return function (
+      target: any,
+      propertyKey: string,
+      descriptor: PropertyDescriptor
+    ) {
       
-        descriptor.value = async function (...args: any) {
 
-          try {
+      const originalMethod = descriptor.value;
 
-            const result =  await originalMethod.apply(this, args);
+      descriptor.value = async function (...args: any) {
+        try {
+          const result = await originalMethod.apply(this, args);
 
-            return result
+          return result;
+        } catch (error) {
+          const e = error as any;
 
-          } catch (error) {
+          const response = e.response as any;
 
-            const e = error as any;
-    
-            const response = e.response as any;
+          return {
+            ...response.data,
+            status_code: response.status,
+          } as ErrorResponse;
+        }
+      };
+    };
+  },
+};
 
-            return{ ...response.data, status_code: response.status } as ErrorResponse
-           
-          }
-        };
-      
-      }
-    }
-}
 

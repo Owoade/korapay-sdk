@@ -1,4 +1,4 @@
-import { Response } from "../miscellaneous/intercace";
+import { Response } from "../miscellaneous/intercace.js";
 
 export interface ResolveBankAcoountPayload {
     bank: string;
